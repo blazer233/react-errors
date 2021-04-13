@@ -1,34 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import catchreacterror from "./hanlder";
 import "./App.css";
-const fnCount1 = props => {
-  console.log(props)
-  if (props.count == 3) {
-    throw new Error("count is three");
-  }
-  return props.count;
+const fnCount1 = ({ count }) => {
+  if (count == 3) throw new Error("count is three");
+  return <span>{count}</span>;
 };
 class fnCount2 extends React.Component {
   render() {
     const { count } = this.props;
-    if (count == 2) {
-      throw new Error("count is two");
-    }
+    if (count == 2) throw new Error("count is two");
     return <span>{count}</span>;
   }
 }
 const SafeCount1 = catchreacterror()(fnCount1);
 const SafeCount2 = catchreacterror()(fnCount2);
 
-function App() {
+const App = () => {
   const [count, setCount] = useState(0);
-  const refs_function = useRef();
-  const refs_class = useRef();
-  useEffect(() => {
-    console.log(refs_class.current);
-    console.log(refs_function.current);
-  }, []);
-
   const errorbackfn = ({ error, resetErrorBoundary }) => (
     <div>
       <p>出错啦</p>
@@ -36,7 +24,6 @@ function App() {
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
   );
-
   const errorbackcom = () => <h1>出错啦,不可撤销</h1>;
   const ListenError = (arg, info) => console.log("出错了:" + arg.message, info);
   const onReset = () => setCount(0);
@@ -51,7 +38,6 @@ function App() {
         Class componnet:
         <SafeCount2
           count={count}
-          ref={refs_class}
           fallbackRender={errorbackfn}
           onReset={onReset}
           onError={ListenError}
@@ -61,13 +47,12 @@ function App() {
         Function componnet:
         <SafeCount1
           count={count}
-          // ref={refs_function}
           FallbackComponent={errorbackcom}
           onError={ListenError}
         />
       </div>
     </div>
   );
-}
+};
 
 export default App;
