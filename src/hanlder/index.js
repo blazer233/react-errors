@@ -24,7 +24,7 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
     console.log("函数组件", InnerComponent.name);
     return forwardRef((props, ref) => (
       <Boundary {...props}>
-        <InnerComponent {...props} forwardedRef={ref} />
+        <InnerComponent ref={ref} {...props} />
       </Boundary>
     ));
   }
