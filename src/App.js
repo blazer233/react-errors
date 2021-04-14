@@ -12,19 +12,19 @@ class fnCount2 extends React.Component {
     return <span>{count}</span>;
   }
 }
+const errorbackfn = ({ error: { message }, resetErrorBoundary }) => (
+  <div>
+    <p>出错啦</p>
+    <pre>{message}</pre>
+    <button onClick={resetErrorBoundary}>Try again</button>
+  </div>
+);
+const errorbackcom = () => <h1>出错啦,不可撤销</h1>;
 const SafeCount1 = catchreacterror()(fnCount1);
 const SafeCount2 = catchreacterror()(fnCount2);
 
 const App = () => {
   const [count, setCount] = useState(0);
-  const errorbackfn = ({ error: { message }, resetErrorBoundary }) => (
-    <div>
-      <p>出错啦</p>
-      <pre>{message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
-  );
-  const errorbackcom = () => <h1>出错啦,不可撤销</h1>;
   const ListenError = (arg, info) => console.log("出错了:" + arg.message, info);
   const onReset = () => setCount(0);
   return (
