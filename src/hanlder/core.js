@@ -1,8 +1,7 @@
-import * as React from "react";
-const initialState = { error: null };
+import React from "react";
+const initialState = { error: false };
 class ErrorBoundary extends React.Component {
   state = initialState;
-  updatedWithError = false;
   static getDerivedStateFromError(error) {
     return { error };
   }
@@ -14,19 +13,13 @@ class ErrorBoundary extends React.Component {
 
   // 执行自定义重置逻辑，并重置组件状态
   resetErrorBoundary = () => {
-    if (this.props.onReset) {
-      this.props.onReset();
-    }
-    this.reset();
-  };
-  reset = () => {
-    this.updatedWithError = false;
+    if (this.props.onReset) this.props.onReset();
     this.setState(initialState);
   };
   render() {
     const { fallback, FallbackComponent, fallbackRender } = this.props;
     const { error } = this.state;
-    if (error !== null) {
+    if (error) {
       const fallbackProps = {
         error,
         resetErrorBoundary: this.resetErrorBoundary,

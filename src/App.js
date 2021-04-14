@@ -17,10 +17,10 @@ const SafeCount2 = catchreacterror()(fnCount2);
 
 const App = () => {
   const [count, setCount] = useState(0);
-  const errorbackfn = ({ error, resetErrorBoundary }) => (
+  const errorbackfn = ({ error: { message }, resetErrorBoundary }) => (
     <div>
       <p>出错啦</p>
-      <pre>{error.message}</pre>
+      <pre>{message}</pre>
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
   );
