@@ -137,7 +137,7 @@ resetErrorBoundary = () => {
   }
 ```
 
-##### 2️⃣ 将 ErrorBoundary 通过高阶函数进行包裹返回
+#### 2️⃣ 将 ErrorBoundary 通过高阶函数进行包裹返回
 
 ```javascript
 import React from "react";
@@ -153,7 +153,7 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
 
 ---
 
-## 2、使用&测试 🏁
+## 使用&测试 🏁
 
 通过一个点击自增的 Demo，当数字到达某值，抛出异常，这里分别对 class 组件和 Function 组件作为发起异常的组件进行测试
 
