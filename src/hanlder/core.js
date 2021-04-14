@@ -24,15 +24,10 @@ class ErrorBoundary extends React.Component {
         error,
         resetErrorBoundary: this.resetErrorBoundary,
       };
-      if (React.isValidElement(fallback)) {
-        return fallback;
-      }
-      if (typeof fallbackRender === "function") {
+      if (React.isValidElement(fallback)) return fallback;
+      if (typeof fallbackRender === "function")
         return fallbackRender(fallbackProps);
-      }
-      if (FallbackComponent) {
-        return <FallbackComponent {...fallbackProps} />;
-      }
+      if (FallbackComponent) return <FallbackComponent {...fallbackProps} />;
       throw new Error("ErrorBoundary 组件需要传入 fallback");
     }
 
