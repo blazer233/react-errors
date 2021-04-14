@@ -1,16 +1,16 @@
 # 封装一个处理 react 异常的最简 ErrorBoundary 组件 🎅
 
-### 前言 📝
+## 前言 📝
 
 > 👉 从 React 16 开始，引入了 Error Boundaries 概念，它可以捕获它的子组件中产生的错误，记录错误日志，并展示降级内容，具体 [官网地址](https://zh-hans.reactjs.org/docs/error-boundaries.html#introducing-error-boundaries)。 👈
 
-![image-1](https://raw.githubusercontent.com/blazer233/Today-wallpapers/master/public/logo512.png)
+![Alt](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/914cba218a7e415eafc5feddcf9454dc~tplv-k3u1fbpfcp-zoom-1.image)
 
 错误边界避免一个组件错误导致整个页面白屏不能使用等情况，使用优雅降级的方式呈现备用的 UI，错误边界可以在渲染期间、生命周期和整个组件树的构造函数中捕获错误。自 React 16 起，任何未被错误边界捕获的错误将会导致整个 React 组件树被卸载
 
 ---
 
-### ErrorBoundary 意义 🤖
+## ErrorBoundary 意义 🤖
 
 - 某些 UI 崩溃，不至于整个 webapp 崩溃
 
@@ -18,7 +18,7 @@
 
 ---
 
-### 官网如何实现 🥔
+## 官网如何实现 🥔
 
 > 👉 如果一个 class 组件中定义了 static getDerivedStateFromError() 或 componentDidCatch() 这两个生命周期方法中的任意一个（或两个）时，那么它就变成一个错误边界。当抛出错误后，请使用 static getDerivedStateFromError() 渲染备用 UI ，使用 componentDidCatch() 打印错误信息 👈
 
@@ -62,11 +62,11 @@ class ErrorBoundary extends React.Component {
 
 ---
 
-### 封装一个可配置的 ErrorBoundary 🚲
+## 封装一个可配置的 ErrorBoundary 🚲
 
 了解了官网实现错误边界组件的方法，我们可以封装一个`ErrorBoundary`组件，造一个好用的轮子，而不是直接写死`return <h1>Something went wrong</h1>`，学习了`react-redux`原理后我们知道可以用高阶组件来包裹`react`组件，将`store`中的数据和方法全局注入，同理，我们也可以使用高阶组件包裹使其成为一个能够错误捕获的 react 组件
 
-#### 1️⃣创造一个可配置的 ErrorBoundary 类组件
+#### 1️⃣ 创造一个可配置的 ErrorBoundary 类组件
 
 相比与官网的 `ErrorBoundary`，我们可以将日志上报的方法以及显示的 `UI` 通过接受传参的方式进行动态配置，对于传入的`UI`，我们可以设置以`react`组件的方式 或 是一个`React Element`进行接受，而且通过组件的话，我们可以传入参数，这样可以在兜底 UI 中拿到具体的错误信息
 
@@ -107,7 +107,7 @@ class ErrorBoundary extends React.Component {
 
 这样就可以对兜底`UI`显示和`错误日志`进行动态获取，使组件更加灵活，但是又有一个问题出现，有时候会遇到这种情况：服务器突然 503、502 了，前端获取不到响应，这时候某个组件报错了，但是过一会又正常了。比较好的方法是用户点一下被`ErrorBoundary`封装的组件中的一个方法来重新加载出错组件，不需要重刷页面，这时候需要兜底的组件中应该暴露出一个方法供`ErrorBoundary`进行处理
 
-![image-1](https://raw.githubusercontent.com/blazer233/react-errors/errors-hook/public/png.png)
+![image-1](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb534b2ba8de4a0a85cbce8b837d4e19~tplv-k3u1fbpfcp-zoom-1.image)
 
 1. 在 ErrorBoundary 中添加方法，检测是否有注入重置方法，如果有重置方法就执行并且重置 state 中的 error，使其错误状态为 false
 
@@ -137,7 +137,7 @@ resetErrorBoundary = () => {
   }
 ```
 
-##### 2️⃣将 ErrorBoundary 通过高阶函数进行包裹返回
+##### 2️⃣ 将 ErrorBoundary 通过高阶函数进行包裹返回
 
 ```javascript
 import React from "react";
@@ -153,17 +153,19 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
 
 ---
 
-##### 2、使用&测试 🏁
+## 2、使用&测试 🏁
 
-通过一个点击自增的 Demo，分别对 class 组件和 Function 组件作为发起异常的组件进行测试
+通过一个点击自增的 Demo，当数字到达某值，抛出异常，这里分别对 class 组件和 Function 组件作为发起异常的组件进行测试
 
 - 发起异常的组件
 
 ```javascript
+//Function组件
 const fnCount1 = ({ count }) => {
   if (count == 3) throw new Error("count is three");
   return <span>{count}</span>;
 };
+//Class组件
 class fnCount2 extends React.Component {
   render() {
     const { count } = this.props;
@@ -197,6 +199,8 @@ const errorbackcom = () => <h1>出错啦,不可撤销</h1>;
 //对发起异常的组件进行包裹处理，返回一个可以处理错误编辑的高阶组件
 const SafeCount1 = catchreacterror()(fnCount1);
 const SafeCount2 = catchreacterror()(fnCount2);
+
+//测试主组件
 const App = () => {
   const [count, setCount] = useState(0);
   const ListenError = (arg, info) => console.log("出错了:" + arg.message, info); //错误时进行的回调
@@ -230,21 +234,22 @@ const App = () => {
 };
 ```
 
-![demo-1](https://raw.githubusercontent.com/blazer233/Today-wallpapers/master/public/logo512.png)
+![demo-1](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b73110b411344b8a8c7cb7b8d3e2b6d2~tplv-k3u1fbpfcp-zoom-1.image)
 
 大功告成！
 
-### 遇到的问题&总结 💢
+## 遇到的问题&总结 💢
 
 有很多时候 react 错误边界不是万能的比如
 
 - 事件错误
 
-![demo-1](https://upload-images.jianshu.io/upload_images/13262886-423b6eb21486d828.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![demo-1](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f097a4fd654a48e5a29a889462e89065~tplv-k3u1fbpfcp-zoom-1.image)
+上面 this.o 不存在，会报错，window.onerror 可以捕获，但是错误边界捕获不到。
 
 - 异步代码
 
-![demo-1](https://upload-images.jianshu.io/upload_images/13262886-b0255bba376a0bfd.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![demo-1](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5641266e60f4a139605862e322a9cc8~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 服务端渲染 和 错误边界自己的错误
 
